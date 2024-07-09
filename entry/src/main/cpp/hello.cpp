@@ -1,5 +1,12 @@
 #include "napi/native_api.h"
 
+#undef LOG_DOMAIN
+#undef LOG_TAG
+#define TAG "SOTest"
+#define LOG_DOMAIN 0x0001
+#define LOG_TAG TAG
+#include <hilog/log.h>
+
 static napi_value Add(napi_env env, napi_callback_info info)
 {
     size_t requireArgc = 2;
@@ -27,11 +34,18 @@ static napi_value Add(napi_env env, napi_callback_info info)
 
 }
 
+static napi_value DiscoverPrinters(napi_env env, napi_callback_info info)
+{
+    OH_LOG_DEBUG(LOG_APP, "%{public}s", "in DiscoverPrinters");
+    return 0;
+}
+
 EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports)
 {
     napi_property_descriptor desc[] = {
-        { "add", nullptr, Add, nullptr, nullptr, nullptr, napi_default, nullptr }
+        { "add", nullptr, Add, nullptr, nullptr, nullptr, napi_default, nullptr },
+        { "discoverPrinters", nullptr, DiscoverPrinters, nullptr, nullptr, nullptr, napi_default, nullptr }
     };
     napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
     return exports;

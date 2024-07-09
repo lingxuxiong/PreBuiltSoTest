@@ -15,9 +15,17 @@ struct Index {
           .onClick(() => {
             hilog.info(0x0000, 'testTag', 'Test NAPI 2 + 3 = %{public}d', testNapi.add(2, 3));
           })
+        Button("Discover Printers")
+          .alignSelf(ItemAlign.Center)
+          .width('25%')
+          .margin(2)
+          .onClick(() => {
+            testNapi.discoverPrinters();
+          })
       }
       .width('100%')
     }
     .height('100%')
   }
+
 }
