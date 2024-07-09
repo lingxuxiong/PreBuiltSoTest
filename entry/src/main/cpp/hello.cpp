@@ -1,4 +1,5 @@
 #include "napi/native_api.h"
+#include "cups/cups.h"
 
 #undef LOG_DOMAIN
 #undef LOG_TAG
@@ -6,6 +7,18 @@
 #define LOG_DOMAIN 0x0001
 #define LOG_TAG TAG
 #include <hilog/log.h>
+
+static void enumPrinters() {
+    auto print_dest = [](void *user_data, unsigned flags, cups_dest_t *dest) {
+        if (dest->instance)
+            OH_LOG_DEBUG(LOG_APP, "%{public}s%{public}s", dest->name, dest->instance);
+        else
+            OH_LOG_DEBUG(LOG_APP, "%{public}s", dest->name);
+
+        return (1);
+    };
+    cupsEnumDests(CUPS_DEST_FLAGS_NONE, 1000, NULL, 0, 0, print_dest, NULL);
+}
 
 static napi_value Add(napi_env env, napi_callback_info info)
 {
@@ -37,6 +50,7 @@ static napi_value Add(napi_env env, napi_callback_info info)
 static napi_value DiscoverPrinters(napi_env env, napi_callback_info info)
 {
     OH_LOG_DEBUG(LOG_APP, "%{public}s", "in DiscoverPrinters");
+    enumPrinters();
     return 0;
 }
 
